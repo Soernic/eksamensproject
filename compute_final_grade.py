@@ -2,7 +2,7 @@ import numpy as np
 
 def computeFinalGrades(grades):
     gradesFinal = np.zeros(len(grades))
-    
+    # checks each students grades and assigns a final grade
     for i in range(len(grades)):
         if -3 in grades[i]:
             gradesFinal[i] = -3
