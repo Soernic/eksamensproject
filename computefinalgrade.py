@@ -2,7 +2,7 @@ import numpy as np
 from roundgrade import roundGrade
 def computeFinalGrades(grades):
     gradesFinal = np.zeros(len(grades))
-    
+    # checks each students grades and assigns a final grade
     for i in range(len(grades)):
         if -3 in grades[i]:
             gradesFinal[i] = -3
@@ -11,6 +11,7 @@ def computeFinalGrades(grades):
         else:
             grades[i].remove(np.min(grades[i]))
             gradesFinal[i] = np.mean(grades[i])
+            # Run the final grades that might be decimals through the roundGrade function
             roundGrade(gradesFinal[i])
     return gradesFinal
 
