@@ -1,5 +1,5 @@
 from round_grade import roundGrade
-from computefinal_grade import computeFinalGrades
+from compute_final_grade import computeFinalGrades
 from grades_plot import gradesPlot
 from menu_handler import menuHandler
 from data_load import dataLoad

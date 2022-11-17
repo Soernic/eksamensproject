@@ -1,0 +1,2 @@
+def checkError():
+    return None
