@@ -1,5 +1,5 @@
 import numpy as np
-
+from roundgrade import roundGrade
 def computeFinalGrades(grades):
     gradesFinal = np.zeros(len(grades))
     
@@ -11,6 +11,7 @@ def computeFinalGrades(grades):
         else:
             grades[i].remove(np.min(grades[i]))
             gradesFinal[i] = np.mean(grades[i])
+            roundGrade(gradesFinal[i])
     return gradesFinal
 
 print(computeFinalGrades(np.array([[10,12,7,4],[12,10],[7,4,-3],[2],[-3]])))
