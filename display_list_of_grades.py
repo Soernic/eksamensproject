@@ -1,2 +1,2 @@
-def displayListOfGraders():
+def displayListOfGrades():
     return None

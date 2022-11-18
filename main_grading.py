@@ -6,22 +6,28 @@ from data_load import dataLoad
 from check_error import checkError
 from display_list_of_grades import displayListOfGrades
 
-import pandas as pd
 import numpy as np
 
 def main():
     while True:
-        menuItems = ['Load data from file', 'Display list of grades', 'Compute final grades', 'Round grades', 'Plot grades', 'Exit']
+        menuItems = np.array(['Load data from file', 'Check for errors', 'Plot grades', 'Display list of grades', 'Exit'])
         mainMenuOption = menuHandler(menuItems)
-        if mainMenuOption is 1:
-            dataLoad()
-        elif mainMenuOption is 2:
-            checkError()
-        elif mainMenuOption is 3:
-            gradesPlot()
-        elif mainMenuOption is 4:
-            displayListOfGrades()
-        elif mainMenuOption is 5:
+        if mainMenuOption == 1:
+            dataCSV, assignments, students = dataLoad()
+
+            print(f'\n{dataCSV}\n')
+            print(f'Number of assignments: {assignments}')
+            print(f'Number of students: {students}\n')
+
+            data = np.array(dataCSV)
+
+        elif mainMenuOption == 2:
+            checkError(data)
+        elif mainMenuOption == 3:
+            gradesPlot(data)
+        elif mainMenuOption == 4:
+            displayListOfGrades(data)
+        elif mainMenuOption == 5:
             break
 
 if __name__ == '__main__':
