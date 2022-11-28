@@ -1,6 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
+
+'''
+The function gradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
+The bar plot shows the amount of students that got each grade.
+The scatter plot shows the grades for each assignment. The x-axis shows the assignment number and the y-axis shows the grade.
+
+params: data - a numpy array containing the grades for each student and assignment
+returns: nothing
+'''
 
 def gradesPlot(data):
 
@@ -12,9 +20,9 @@ def gradesPlot(data):
     # Plot the grades
     gradeList = [-3, 0, 2, 4, 7, 10, 12]
 
-    for i in gradeList:
-        b = np.count_nonzero([finalGrade == i])
-        axs[0].bar(str(i), b, width=0.6)
+    for grade in gradeList:
+        gradeAmount = np.count_nonzero([finalGrade == grade])
+        axs[0].bar(str(grade), gradeAmount, width=0.6)
 
     axs[0].set_xlabel('Grades')
     axs[0].set_ylabel('Amount of students')
@@ -22,38 +30,28 @@ def gradesPlot(data):
     axs[0].grid(axis='y')
     axs[0].yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
-    #import data from file
-    dataCSV = pd.read_csv('grades.csv', sep=',')
-    data = np.array(dataCSV)
-
     grades = data[:, 2:]
 
     assignments = len(grades[0])
 
-    for i in range(len(gradeList)):
-        grades[grades == gradeList[i]] = str(i)
-
-    grades = grades.astype(float)
-
-    # plot each assignment on the x-axis and the grades on the y-axis as a scatter plot, add random noise to the y-axis to avoid overlapping points
     for i in range(assignments):
         y = grades[:, i]
         y += np.random.normal(0, 0.1, len(y))
 
-        x = np.ones(len(y)) * i
+        x = np.ones(len(y)) * (i+1)
         x += np.random.normal(0, 0.1, len(y))
 
         axs[1].scatter(x, y, s=30, marker='o', edgecolors='black')
 
-    axs[1].set_yticklabels(['', '-3', '0', '2', '4', '7', '10', '12'])
-    axs[1].set_xticks(np.arange(assignments))
+    axs[1].set_yticks([-3, 0, 2, 4, 7, 10, 12])
+    axs[1].set_xticks(np.arange(assignments)+1)
     axs[1].set_xlabel('Assignments')
     axs[1].set_ylabel('Grades')
     axs[1].set_title('Grades for each assignment')
-    axs[1].legend()
+    axs[1].grid()
+    axs[1].set_axisbelow(True)
+    # axs[1].legend()
 
     # shows the plot
     plt.show()
-
-gradesPlot("")
 

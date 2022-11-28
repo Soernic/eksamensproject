@@ -9,6 +9,11 @@ from display_list_of_grades import displayListOfGrades
 import numpy as np
 
 def main():
+    '''
+    The main loop runs the main menu and calls the appropriate function
+    The main script calls the menuHandler function to display the main menu
+    This main menu runs in a loop until the user quits
+    '''
     while True:
         menuItems = np.array(['Load data from file', 'Check for errors', 'Plot grades', 'Display list of grades', 'Exit'])
         mainMenuOption = menuHandler(menuItems)
