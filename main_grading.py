@@ -2,10 +2,21 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+'''
+This project was created by: 
+- August Borg Ljorring  (s224178)
+- Malte Lau             (s224183)
+- Søren Skov Jensen     (s224169)
+'''
+
 def checkError():
     return None
 
+'''
+Made by: Malte
+'''
 def computeFinalGrades(grades):
+    grades = grades[:, 2:]
     gradesFinal = np.zeros(len(grades))
     # checks each students grades and assigns a final grade
     for i in range(len(grades)):
@@ -14,8 +25,7 @@ def computeFinalGrades(grades):
         elif len(grades[i]) == 1:
             gradesFinal[i] = grades[i][0]
         else:
-            grades[i].remove(np.min(grades[i]))
-            gradesFinal[i] = np.mean(grades[i])
+            gradesFinal[i] = np.mean(np.delete(grades[i], np.argmin(grades[i])))
     return gradesFinal
 
 '''
@@ -47,7 +57,9 @@ def dataLoad():
     return np.array(dataCSV)
 
 def roundGrade(grades: np.array):
-    """_summary_
+    """
+    Made by: Søren
+    _summary_
 
     Args:
         grades (np.array): _description_
@@ -55,7 +67,6 @@ def roundGrade(grades: np.array):
     Returns:
         _type_: _description_
     """
-    
     # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
     possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
     gradesRounded = np.array([])
@@ -99,18 +110,17 @@ def displayListOfGrades():
     return None
 
 '''
-The function gradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
+Made by: August
+GradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
 The bar plot shows the amount of students that got each grade.
 The scatter plot shows the grades for each assignment. The x-axis shows the assignment number and the y-axis shows the grade.
 
 params: data - a numpy array containing the grades for each student and assignment
 returns: nothing
 '''
-
 def gradesPlot(data):
-
-    finalGrade = np.array([12, 12, 10, 7, 4, 2, -3,0,0,0])
-
+    finalGrade = computeFinalGrades(data)
+    
     fig, axs = plt.subplots(1, 2)
     fig.set_size_inches(13, 5)
 
@@ -128,8 +138,7 @@ def gradesPlot(data):
     axs[0].yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
     grades = data[:, 2:]
-
-    assignments = len(grades[0])
+    assignments = data.shape[1] - 2
 
     for i in range(assignments):
         y = grades[:, i]
@@ -147,24 +156,14 @@ def gradesPlot(data):
     axs[1].set_title('Grades for each assignment')
     axs[1].grid()
     axs[1].set_axisbelow(True)
-    # axs[1].legend()
-
-    # shows the plot
+    
     plt.show()
 
 '''
-The main function is the entry point of the program. It is called when the program is executed.
-
-The main function should contain the following:
-- A while loop that runs until the user chooses to exit the program.
-- A call to the menuHandler function to display the main menu and get the user's choice.
-- A call to the dataLoad function if the user chooses to load data from file.
-- A call to the checkError function if the user chooses to check for errors.
-- A call to the gradesPlot function if the user chooses to plot grades.
-- A call to the displayListOfGrades function if the user chooses to display a list of grades.
-- A break statement if the user chooses to exit the program.
+The main function:
 '''
 if __name__ == '__main__':
+    data = dataLoad()
     while True:
         menuItems = np.array(['Load data from file', 'Check for errors', 'Plot grades', 'Display list of grades', 'Exit'])
         mainMenuOption = menuHandler(menuItems)
