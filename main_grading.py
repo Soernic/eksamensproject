@@ -2,8 +2,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def checkError():
-    return None
+def checkError(dataCSV):
+    # DER SKAL LIGE LÆSES NOGET DATA HER :D
+    if dataCSV is not np.unique(dataCSV[:,0]):
+        for i in range(0,len(dataCSV[:,0])):
+            if dataCSV[i,0] not in datafail:
+                datafail.append(dataCSV[i,0])
+            else:
+                print(f"Error: Student id duplicate: {dataCSV[i,0]} in line {i}")
+    
+    for i in range(2,len(dataCSV[0,:])):
+        for j in range(0,len(dataCSV[:,0])):
+            if dataCSV[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
+                print(f"Error: Student: {dataCSV[j,0]}: {dataCSV[j,1]} has recieved invalid grade in assignment {i}")
+    return # HVAD FANDEN SKAL DER SKE HER?
 
 def computeFinalGrades(grades):
     gradesFinal = np.zeros(len(grades))
