@@ -88,7 +88,6 @@ def checkError(data):
     
     Author: Malte Lau (s224183)
     '''
-    # DER SKAL LIGE LÆSES NOGET DATA HER :D
     datafail = []
     if data is not np.unique(data[:,0]):
         for i in range(0,len(data[:,0])):
