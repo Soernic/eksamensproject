@@ -17,18 +17,23 @@ def checkError(dataCSV):
                 print(f"Error: Student: {dataCSV[j,0]}: {dataCSV[j,1]} has recieved invalid grade in assignment {i}")
     return # HVAD FANDEN SKAL DER SKE HER?
 
-def computeFinalGrades(grades):
-    gradesFinal = np.zeros(len(grades))
+'''
+Made by: Malte
+'''
+def computeFinalGrades(data):
+    grades = data[:, 2:]
+    gradesFinal = np.zeros(len(data))
+    
     # checks each students grades and assigns a final grade
-    for i in range(len(grades)):
-        if -3 in grades[i]:
+    for i, grade in enumerate(grades):
+        if -3 in grade:
             gradesFinal[i] = -3
-        elif len(grades[i]) == 1:
-            gradesFinal[i] = grades[i][0]
+        elif len(grade) == 1:
+            gradesFinal[i] = grade[0]
         else:
-            grades[i].remove(np.min(grades[i]))
-            gradesFinal[i] = np.mean(grades[i])
-    return gradesFinal
+            gradesFinal[i] = np.mean(np.delete(grade, np.argmin(grade)))
+
+    return roundGrade(gradesFinal)
 
 '''
 The dataLoad function should contain the following:
@@ -59,7 +64,9 @@ def dataLoad():
     return np.array(dataCSV)
 
 def roundGrade(grades: np.array):
-    """_summary_
+    """
+    Made by: Søren
+    _summary_
 
     Args:
         grades (np.array): _description_
@@ -67,14 +74,16 @@ def roundGrade(grades: np.array):
     Returns:
         _type_: _description_
     """
-    
     # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
     possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
     gradesRounded = np.array([])
     
     for grade in grades:
         gradesRounded = np.append(gradesRounded, min(possible_grades, key=lambda x: abs(x - grade)))
-    
+
+    # måske bedre at bruge list comprehension
+    gradesRounded = np.array([min(possible_grades, key=lambda x: abs(x - grade)) for grade in grades])
+
     return gradesRounded
 
 def inputNumber(promt):
@@ -111,23 +120,22 @@ def displayListOfGrades():
     return None
 
 '''
-The function gradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
+Made by: August
+GradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
 The bar plot shows the amount of students that got each grade.
 The scatter plot shows the grades for each assignment. The x-axis shows the assignment number and the y-axis shows the grade.
 
 params: data - a numpy array containing the grades for each student and assignment
 returns: nothing
 '''
-
 def gradesPlot(data):
-
-    finalGrade = np.array([12, 12, 10, 7, 4, 2, -3,0,0,0])
-
+    finalGrade = computeFinalGrades(data)
+    
     fig, axs = plt.subplots(1, 2)
     fig.set_size_inches(13, 5)
 
     # Plot the grades
-    gradeList = [-3, 0, 2, 4, 7, 10, 12]
+    gradeList = np.array([-3, 0, 2, 4, 7, 10, 12])
 
     for grade in gradeList:
         gradeAmount = np.count_nonzero([finalGrade == grade])
@@ -140,43 +148,36 @@ def gradesPlot(data):
     axs[0].yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
     grades = data[:, 2:]
+    students_num = data.shape[0]
+    assignments_num = data.shape[1] - 2
 
-    assignments = len(grades[0])
-
-    for i in range(assignments):
+    # plotting the points for each assignment so each assignment is a different color
+    for i in range(assignments_num):
         y = grades[:, i]
-        y += np.random.normal(0, 0.1, len(y))
+        y += np.random.normal(0, 0.1, students_num)
 
-        x = np.ones(len(y)) * (i+1)
-        x += np.random.normal(0, 0.1, len(y))
+        x = np.ones(students_num) * (i+1)
+        x += np.random.normal(0, 0.1, students_num)
 
         axs[1].scatter(x, y, s=30, marker='o', edgecolors='black')
+        #add a line for the average grade for each assignment
+        axs[1].plot([i+0.8, i+1.2], [np.mean(y), np.mean(y)], color='red', linewidth=2)
 
     axs[1].set_yticks([-3, 0, 2, 4, 7, 10, 12])
-    axs[1].set_xticks(np.arange(assignments)+1)
+    axs[1].set_xticks(np.arange(assignments_num)+1)
     axs[1].set_xlabel('Assignments')
     axs[1].set_ylabel('Grades')
     axs[1].set_title('Grades for each assignment')
     axs[1].grid()
     axs[1].set_axisbelow(True)
-    # axs[1].legend()
-
-    # shows the plot
+    
     plt.show()
 
 '''
-The main function is the entry point of the program. It is called when the program is executed.
-
-The main function should contain the following:
-- A while loop that runs until the user chooses to exit the program.
-- A call to the menuHandler function to display the main menu and get the user's choice.
-- A call to the dataLoad function if the user chooses to load data from file.
-- A call to the checkError function if the user chooses to check for errors.
-- A call to the gradesPlot function if the user chooses to plot grades.
-- A call to the displayListOfGrades function if the user chooses to display a list of grades.
-- A break statement if the user chooses to exit the program.
+The main function:
 '''
 if __name__ == '__main__':
+    data = dataLoad()
     while True:
         menuItems = np.array(['Load data from file', 'Check for errors', 'Plot grades', 'Display list of grades', 'Exit'])
         mainMenuOption = menuHandler(menuItems)
