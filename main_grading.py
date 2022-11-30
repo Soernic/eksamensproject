@@ -183,10 +183,6 @@ def roundGrade(grades: np.array):
     possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
     gradesRounded = np.array([])
     
-    for grade in grades:
-        gradesRounded = np.append(gradesRounded, min(possible_grades, key=lambda x: abs(x - grade)))
-
-    # måske bedre at bruge list comprehension
     gradesRounded = np.array([min(possible_grades, key=lambda x: abs(x - grade)) for grade in grades])
 
     return gradesRounded
@@ -245,6 +241,7 @@ def gradesPlot(data):
     axs[1].grid()
     axs[1].set_axisbelow(True)
     
+    print("Plot is shown in a new window, please close the window to continue")
     plt.show()
     
     return
