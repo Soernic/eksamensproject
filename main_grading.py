@@ -26,6 +26,7 @@ def computeFinalGrades(grades):
             gradesFinal[i] = grades[i][0]
         else:
             gradesFinal[i] = np.mean(np.delete(grades[i], np.argmin(grades[i])))
+    gradesFinal = roundGrade(gradesFinal)
     return gradesFinal
 
 '''
@@ -106,8 +107,24 @@ def menuHandler(menuItems):
             
     return choice
 
-def displayListOfGrades():
-    return None
+
+def displayListOfGrades(data: np.array):
+    # Displays a list of grades as a dataframe along with a rounded final grade for each student.
+    
+    df_columns = np.hstack((
+        'Student ID', 
+        'Student Name', 
+        np.array([f"Assignment {count}" for count, assignment in enumerate(data[0, 2:], start=1)])))
+    
+    df = pd.DataFrame(data=data, columns=df_columns)
+    
+    final_grades = pd.DataFrame({'Final Grade': computeFinalGrades(data[:, 2:])})
+
+    df = df.join(final_grades)
+    
+    print(df.sort_values(by=['Student Name']))
+    
+    return
 
 '''
 Made by: August
