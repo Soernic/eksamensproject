@@ -238,10 +238,11 @@ def gradesPlot(data):
     axs[1].set_xlabel('Assignments')
     axs[1].set_ylabel('Grades')
     axs[1].set_title('Grades for each assignment')
+    axs[1].set_ylim(-4, 13)
     axs[1].grid()
     axs[1].set_axisbelow(True)
     
-    print("Plot is shown in a new window, please close the window to continue")
+    print("Plot is shown in a new window, please close the window to continue\n")
     plt.show()
     
     return
