@@ -15,18 +15,20 @@ def checkError():
 '''
 Made by: Malte
 '''
-def computeFinalGrades(grades):
-    grades = grades[:, 2:]
-    gradesFinal = np.zeros(len(grades))
+def computeFinalGrades(data):
+    grades = data[:, 2:]
+    gradesFinal = np.zeros(len(data))
+    
     # checks each students grades and assigns a final grade
-    for i in range(len(grades)):
-        if -3 in grades[i]:
+    for i, grade in enumerate(grades):
+        if -3 in grade:
             gradesFinal[i] = -3
-        elif len(grades[i]) == 1:
-            gradesFinal[i] = grades[i][0]
+        elif len(grade) == 1:
+            gradesFinal[i] = grade[0]
         else:
-            gradesFinal[i] = np.mean(np.delete(grades[i], np.argmin(grades[i])))
-    return gradesFinal
+            gradesFinal[i] = np.mean(np.delete(grade, np.argmin(grade)))
+
+    return roundGrade(gradesFinal)
 
 '''
 The dataLoad function should contain the following:
@@ -73,7 +75,10 @@ def roundGrade(grades: np.array):
     
     for grade in grades:
         gradesRounded = np.append(gradesRounded, min(possible_grades, key=lambda x: abs(x - grade)))
-    
+
+    # måske bedre at bruge list comprehension
+    gradesRounded = np.array([min(possible_grades, key=lambda x: abs(x - grade)) for grade in grades])
+
     return gradesRounded
 
 def inputNumber(promt):
@@ -125,7 +130,7 @@ def gradesPlot(data):
     fig.set_size_inches(13, 5)
 
     # Plot the grades
-    gradeList = [-3, 0, 2, 4, 7, 10, 12]
+    gradeList = np.array([-3, 0, 2, 4, 7, 10, 12])
 
     for grade in gradeList:
         gradeAmount = np.count_nonzero([finalGrade == grade])
@@ -138,19 +143,23 @@ def gradesPlot(data):
     axs[0].yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
     grades = data[:, 2:]
-    assignments = data.shape[1] - 2
+    students_num = data.shape[0]
+    assignments_num = data.shape[1] - 2
 
-    for i in range(assignments):
+    # plotting the points for each assignment so each assignment is a different color
+    for i in range(assignments_num):
         y = grades[:, i]
-        y += np.random.normal(0, 0.1, len(y))
+        y += np.random.normal(0, 0.1, students_num)
 
-        x = np.ones(len(y)) * (i+1)
-        x += np.random.normal(0, 0.1, len(y))
+        x = np.ones(students_num) * (i+1)
+        x += np.random.normal(0, 0.1, students_num)
 
         axs[1].scatter(x, y, s=30, marker='o', edgecolors='black')
+        #add a line for the average grade for each assignment
+        axs[1].plot([i+0.8, i+1.2], [np.mean(y), np.mean(y)], color='red', linewidth=2)
 
     axs[1].set_yticks([-3, 0, 2, 4, 7, 10, 12])
-    axs[1].set_xticks(np.arange(assignments)+1)
+    axs[1].set_xticks(np.arange(assignments_num)+1)
     axs[1].set_xlabel('Assignments')
     axs[1].set_ylabel('Grades')
     axs[1].set_title('Grades for each assignment')
