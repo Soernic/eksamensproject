@@ -2,27 +2,30 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+'''
+Author: Malte
+'''
 def checkError(data):
-    # DER SKAL LIGE LÆSES NOGET DATA HER :D
     datafail = []
+    # Checks for non-unique student numbers
     if data is not np.unique(data[:,0]):
         for i in range(0,len(data[:,0])):
             if data[i,0] not in datafail:
                 datafail.append(data[i,0])
             else:
-                print(f"Error: Student id duplicate: {data[i,0]} in line {i}")
+                print(f"Error: Student id duplicate: {data[i,0]} in line {i+1}")
                 fail = True
     
+    # Checks for invalid grades
     for i in range(2,len(data[0,:])):
         for j in range(0,len(data[:,0])):
             if data[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
-                print(f"Error: Student: {data[j,0]}: {data[j,1]} has recieved invalid grade in assignment {i}")
+                print(f"Error: Student: {data[j,0]}: {data[j,1]} has recieved invalid grade in assignment {i-1}")
                 fail = True
     if fail == True:
-        true_or_false_data = print("Data is not valid and error messages have been printed")
+        return print("\n Errors have been found in your data error description has been printed. \n Please fix the errors and try again! \n")
     else:
-        true_or_false_data = print("Data is valid")
-    return true_or_false_data
+        return print("\n No errors have been found in your data, please continue. \n")
 
 '''
 Made by: Malte
