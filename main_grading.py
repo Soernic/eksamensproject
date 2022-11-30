@@ -2,7 +2,21 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+'''
+This project is made by:
+August Borg Ljørring    (s224178)
+Søren Skov Jensen       (s224169)
+Malte Lau               (s224183)
+'''
+
 def checkError(dataCSV):
+    '''
+    
+    Params: dataCSV
+    Returns: None
+    
+    Author: Malte Lau (s224183)
+    '''
     # DER SKAL LIGE LÆSES NOGET DATA HER :D
     if dataCSV is not np.unique(dataCSV[:,0]):
         for i in range(0,len(dataCSV[:,0])):
@@ -17,10 +31,15 @@ def checkError(dataCSV):
                 print(f"Error: Student: {dataCSV[j,0]}: {dataCSV[j,1]} has recieved invalid grade in assignment {i}")
     return # HVAD FANDEN SKAL DER SKE HER?
 
-'''
-Made by: Malte
-'''
 def computeFinalGrades(data):
+    '''
+    
+    
+    Params: data
+    Returns: data as a numpy array
+    
+    Author: Malte Lau (s224183)
+    '''
     grades = data[:, 2:]
     gradesFinal = np.zeros(len(data))
     
@@ -35,18 +54,15 @@ def computeFinalGrades(data):
 
     return roundGrade(gradesFinal)
 
-'''
-The dataLoad function should contain the following:
-- A while loop that runs until the user enters a valid file name.
-- A call to the read_csv function from the pandas library to load the data from the file.
-- A print statement that displays the data.
-- A print statement that displays the number of assignments and the number of students.
-- A return statement that returns the data as a numpy array.
-
-params: None
-returns: data as a numpy array
-'''
 def dataLoad():
+    '''
+
+
+    Params: None
+    Returns: Data as a numpy array
+    
+    Author: August
+    '''
     # Load data from file grades.csv
     while True:
         filename = input("Please enter the name of the file to load: ")
@@ -65,14 +81,12 @@ def dataLoad():
 
 def roundGrade(grades: np.array):
     """
-    Made by: Søren
-    _summary_
-
-    Args:
-        grades (np.array): _description_
-
-    Returns:
-        _type_: _description_
+    
+    
+    Params: Grades (np.array): Array of grades to be rounded
+    Returns: Grades rounded to the nearest grade
+    
+    Author: Søren Skov Jensen (s224169)
     """
     # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
     possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
@@ -87,6 +101,14 @@ def roundGrade(grades: np.array):
     return gradesRounded
 
 def inputNumber(promt):
+    '''
+    
+    Params: promt
+    Returns: number
+    
+    Author: August Borg Ljørring (s224178)
+    '''
+    
     while True:
         try:
             num = int(input(promt))
@@ -96,6 +118,13 @@ def inputNumber(promt):
     return num
 
 def menuHandler(menuItems):
+    '''
+    
+    Params: menuItems
+    Returns: None
+    
+    Author: August Borg Ljørring (s224178)
+    '''
     for i, menuitem in enumerate(menuItems, start=1):
         print(f'{i}. {menuitem}')
 
@@ -116,19 +145,26 @@ def menuHandler(menuItems):
             
     return choice
 
-def displayListOfGrades():
+def displayListOfGrades(data):
+    '''
+    
+    Params: data
+    Returns: None
+    
+    Author: August Borg Ljørring (s224178)
+    '''
+    
     return None
 
-'''
-Made by: August
-GradesPlot takes a numpy array as input and plots the grades in a bar plot and a scatter plot.
-The bar plot shows the amount of students that got each grade.
-The scatter plot shows the grades for each assignment. The x-axis shows the assignment number and the y-axis shows the grade.
-
-params: data - a numpy array containing the grades for each student and assignment
-returns: nothing
-'''
 def gradesPlot(data):
+    '''
+    
+
+    Params: data - a numpy array containing the grades for each student and assignment
+    Returns: nothing
+    
+    Author: August Borg Ljørring (s224178)
+    '''
     finalGrade = computeFinalGrades(data)
     
     fig, axs = plt.subplots(1, 2)
@@ -173,9 +209,7 @@ def gradesPlot(data):
     
     plt.show()
 
-'''
-The main function:
-'''
+# The main function:
 if __name__ == '__main__':
     data = dataLoad()
     while True:
