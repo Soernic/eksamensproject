@@ -9,104 +9,6 @@ Søren Skov Jensen       (s224169)
 Malte Lau               (s224183)
 '''
 
-def checkError(dataCSV):
-    '''
-    
-    Params: dataCSV
-    Returns: None
-    
-    Author: Malte Lau (s224183)
-    '''
-    # DER SKAL LIGE LÆSES NOGET DATA HER :D
-    datafail = []
-    if data is not np.unique(data[:,0]):
-        for i in range(0,len(data[:,0])):
-            if data[i,0] not in datafail:
-                datafail.append(data[i,0])
-            else:
-                print(f"Error: Student id duplicate: {data[i,0]} in line {i}")
-                fail = True
-    
-    for i in range(2,len(data[0,:])):
-        for j in range(0,len(data[:,0])):
-            if data[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
-                print(f"Error: Student: {data[j,0]}: {data[j,1]} has recieved invalid grade in assignment {i}")
-                fail = True
-    if fail == True:
-        true_or_false_data = print("Data is not valid and error messages have been printed")
-    else:
-        true_or_false_data = print("Data is valid")
-    return true_or_false_data
-
-def computeFinalGrades(data):
-    '''
-    
-    
-    Params: data
-    Returns: data as a numpy array
-    
-    Author: Malte Lau (s224183)
-    '''
-    grades = data[:, 2:]
-    gradesFinal = np.zeros(len(data))
-    
-    # checks each students grades and assigns a final grade
-    for i, grade in enumerate(grades):
-        if -3 in grade:
-            gradesFinal[i] = -3
-        elif len(grade) == 1:
-            gradesFinal[i] = grade[0]
-        else:
-            gradesFinal[i] = np.mean(np.delete(grade, np.argmin(grade)))
-
-    return roundGrade(gradesFinal)
-
-def dataLoad():
-    '''
-
-
-    Params: None
-    Returns: Data as a numpy array
-    
-    Author: August
-    '''
-    # Load data from file grades.csv
-    while True:
-        filename = input("Please enter the name of the file to load: ")
-        
-        try:
-            dataCSV = pd.read_csv(filename, sep=',')
-            break
-        except FileNotFoundError:
-            print('File not found. Try again.')
-
-    print(f'\n{dataCSV}\n')
-    print(f'Number of assignments: {len(dataCSV.columns) - 2}')
-    print(f'Number of students: {len(dataCSV.index)}\n')
-
-    return np.array(dataCSV)
-
-def roundGrade(grades: np.array):
-    """
-    
-    
-    Params: Grades (np.array): Array of grades to be rounded
-    Returns: Grades rounded to the nearest grade
-    
-    Author: Søren Skov Jensen (s224169)
-    """
-    # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
-    possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
-    gradesRounded = np.array([])
-    
-    for grade in grades:
-        gradesRounded = np.append(gradesRounded, min(possible_grades, key=lambda x: abs(x - grade)))
-
-    # måske bedre at bruge list comprehension
-    gradesRounded = np.array([min(possible_grades, key=lambda x: abs(x - grade)) for grade in grades])
-
-    return gradesRounded
-
 def inputNumber(promt):
     '''
     
@@ -152,16 +54,115 @@ def menuHandler(menuItems):
             
     return choice
 
+def dataLoad():
+    '''
+
+
+    Params: None
+    Returns: Data as a numpy array
+    
+    Author: August Borg Ljørring (s224178)
+    '''
+    # Load data from file grades.csv
+    while True:
+        filename = input("Please enter the name of the file to load: ")
+        
+        try:
+            dataCSV = pd.read_csv(filename, sep=',')
+            break
+        except FileNotFoundError:
+            print('File not found. Try again.')
+
+    print(f'\n{dataCSV}\n')
+    print(f'Number of assignments: {len(dataCSV.columns) - 2}')
+    print(f'Number of students: {len(dataCSV.index)}\n')
+
+    return np.array(dataCSV)
+
+
+def checkError(dataCSV):
+    '''
+    
+    Params: dataCSV
+    Returns: None
+    
+    Author: Malte Lau (s224183)
+    '''
+    # DER SKAL LIGE LÆSES NOGET DATA HER :D
+    datafail = []
+    if data is not np.unique(data[:,0]):
+        for i in range(0,len(data[:,0])):
+            if data[i,0] not in datafail:
+                datafail.append(data[i,0])
+            else:
+                print(f"Error: Student id duplicate: {data[i,0]} in line {i}")
+                fail = True
+    
+    for i in range(2,len(data[0,:])):
+        for j in range(0,len(data[:,0])):
+            if data[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
+                print(f"Error: Student: {data[j,0]}: {data[j,1]} has recieved invalid grade in assignment {i}")
+                fail = True
+    if fail == True:
+        true_or_false_data = print("Data is not valid and error messages have been printed")
+    else:
+        true_or_false_data = print("Data is valid")
+    return true_or_false_data
+
 def displayListOfGrades(data):
     '''
     
     Params: data
     Returns: None
     
-    Author: August Borg Ljørring (s224178)
+    Author: Søren Skov Jensen (s224169)
     '''
     
     return None
+
+def computeFinalGrades(data):
+    '''
+    
+    
+    Params: data
+    Returns: data as a numpy array
+    
+    Author: Malte Lau (s224183)
+    '''
+    grades = data[:, 2:]
+    gradesFinal = np.zeros(len(data))
+    
+    # checks each students grades and assigns a final grade
+    for i, grade in enumerate(grades):
+        if -3 in grade:
+            gradesFinal[i] = -3
+        elif len(grade) == 1:
+            gradesFinal[i] = grade[0]
+        else:
+            gradesFinal[i] = np.mean(np.delete(grade, np.argmin(grade)))
+
+    return roundGrade(gradesFinal)
+
+def roundGrade(grades: np.array):
+    """
+    
+    
+    Params: Grades (np.array): Array of grades to be rounded
+    Returns: Grades rounded to the nearest grade
+    
+    Author: Søren Skov Jensen (s224169)
+    """
+    # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
+    possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
+    gradesRounded = np.array([])
+    
+    for grade in grades:
+        gradesRounded = np.append(gradesRounded, min(possible_grades, key=lambda x: abs(x - grade)))
+
+    # måske bedre at bruge list comprehension
+    gradesRounded = np.array([min(possible_grades, key=lambda x: abs(x - grade)) for grade in grades])
+
+    return gradesRounded
 
 def gradesPlot(data):
     '''
