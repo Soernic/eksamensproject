@@ -2,20 +2,27 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def checkError(dataCSV):
+def checkError(data):
     # DER SKAL LIGE LÆSES NOGET DATA HER :D
-    if dataCSV is not np.unique(dataCSV[:,0]):
-        for i in range(0,len(dataCSV[:,0])):
-            if dataCSV[i,0] not in datafail:
-                datafail.append(dataCSV[i,0])
+    datafail = []
+    if data is not np.unique(data[:,0]):
+        for i in range(0,len(data[:,0])):
+            if data[i,0] not in datafail:
+                datafail.append(data[i,0])
             else:
-                print(f"Error: Student id duplicate: {dataCSV[i,0]} in line {i}")
+                print(f"Error: Student id duplicate: {data[i,0]} in line {i}")
+                fail = True
     
-    for i in range(2,len(dataCSV[0,:])):
-        for j in range(0,len(dataCSV[:,0])):
-            if dataCSV[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
-                print(f"Error: Student: {dataCSV[j,0]}: {dataCSV[j,1]} has recieved invalid grade in assignment {i}")
-    return # HVAD FANDEN SKAL DER SKE HER?
+    for i in range(2,len(data[0,:])):
+        for j in range(0,len(data[:,0])):
+            if data[j,i] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
+                print(f"Error: Student: {data[j,0]}: {data[j,1]} has recieved invalid grade in assignment {i}")
+                fail = True
+    if fail == True:
+        true_or_false_data = print("Data is not valid and error messages have been printed")
+    else:
+        true_or_false_data = print("Data is valid")
+    return true_or_false_data
 
 '''
 Made by: Malte
