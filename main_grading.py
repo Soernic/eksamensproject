@@ -80,7 +80,7 @@ def dataLoad():
     return np.array(dataCSV)
 
 
-def checkError(dataCSV):
+def checkError(data):
     '''
     
     Params: dataCSV
