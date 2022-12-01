@@ -9,7 +9,7 @@ Søren Skov Jensen       (s224169)
 Malte Lau               (s224183)
 '''
 
-def inputNumber(promt):
+def inputNumber(promt: str):
     '''
     Params: promt from user
     Returns: number
@@ -26,14 +26,15 @@ def inputNumber(promt):
     return num
 
 
-def menuHandler(menuItems):
+def menuHandler(menu_items: list):
     '''
     Params: menuItems
     Returns: None
     
     Author: August Borg Ljørring (s224178)
     '''
-    for i, menuitem in enumerate(menuItems, start=1):
+
+    for i, menuitem in enumerate(menu_items, start=1):
         print(f'{i}. {menuitem}')
 
     choice = 0
@@ -41,10 +42,10 @@ def menuHandler(menuItems):
         choice = inputNumber("Please choose a menu item: ")
 
         # Break if choice is valid
-        if choice > 0 and choice <= len(menuItems):
+        if choice > 0 and choice <= len(menu_items):
             break
         
-        print(f"Not a valid menu choice. Please choose a number between 1 and {len(menuItems)}")
+        print(f"Not a valid menu choice. Please choose a number between 1 and {len(menu_items)}")
 
         # if choice not in range(1, len(menuItems)+1):
         #     print(f"Not a valid menu choice. Please choose a number between 1 and {len(menuItems)}")
@@ -64,21 +65,20 @@ def dataLoad():
     # Load data from file grades.csv
     while True:
         filename = input("Please enter the name of the file to load: ")
-        
         try:
-            dataCSV = pd.read_csv(filename, sep=',')
+            df = pd.read_csv(filename, sep=',')
             break
         except FileNotFoundError:
             print('File not found. Try again.')
 
-    print(f'\n{dataCSV}\n')
-    print(f'Number of assignments: {len(dataCSV.columns) - 2}')
-    print(f'Number of students: {len(dataCSV.index)}\n')
+    print(f'\n{df}\n')
+    print(f'Number of assignments: {len(df.columns) - 2}')
+    print(f'Number of students: {len(df.index)}\n')
 
-    return np.array(dataCSV)
+    return np.array(df)
 
 
-def checkError(data, printErrors):
+def checkError(data: np.array, printErrors: bool):
     '''
     Params: data
     Returns: None
@@ -87,32 +87,34 @@ def checkError(data, printErrors):
     '''
     has_error = False
     students = data[:, 0]
+    
     if students.size != np.unique(students).size:
         has_error = True
         if not printErrors:
             return True
-        for i, student in enumerate(students):
+        for i, student in enumerate(students, start=2):
             if np.count_nonzero(student == students) > 1:
-                print(f'Error: There are multiple occurences of student {student}. This error occurs at line {i+2}')
+                print(f'Error: There are multiple occurences of student {student}. This error occurs at line {i}')
     
-    for studenstNum in range(data.shape[0]):
-        for assignmentNum in range(data.shape[1] - 2):
-            if data[studenstNum,assignmentNum+2] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
+    for students_num in range(data.shape[0]):
+        for assignment_num in range(data.shape[1] - 2):
+            if data[students_num,assignment_num+2] not in np.array([-3, 0, 2, 4, 7, 10, 12]):
                 has_error = True
                 if not printErrors:
                     return True
                 else:
-                    print(f"Error: Student {data[studenstNum,0]} ({data[studenstNum,1]}) has recieved an invalid grade in assignment {assignmentNum + 1}")   
+                    print(f"Error: Student {data[students_num,0]} ({data[students_num,1]}) has recieved an invalid grade in assignment {assignment_num + 1}")   
+    
+    if not printErrors:
+        return False
     
     if has_error:
         print("\nErrors found in data, please se above for more information\n")
         return
+    
     else:
-        if not printErrors:
-            return False
-        else:
-            print("\nNo errors found in data \n")
-            return
+        print("\nNo errors found in data \n")
+        return
 
 
 def displayListOfGrades(data: np.array):
@@ -184,7 +186,7 @@ def roundGrade(grades: np.array):
     return gradesRounded
 
 
-def gradesPlot(data):
+def gradesPlot(grades):
     '''
     Params: data - a numpy array containing the grades for each student and assignment
     Returns: nothing
@@ -194,7 +196,7 @@ def gradesPlot(data):
     if checkError(data, False):
         print("The plot might not be accurate! Because of errors in your data, you can run 'check for errors' to get more information\n")
     
-    finalGrade = computeFinalGrades(data)
+    finalGrade = computeFinalGrades(grades)
     
     fig, axs = plt.subplots(1, 2)
     fig.set_size_inches(13, 5)
@@ -212,13 +214,13 @@ def gradesPlot(data):
     axs[0].grid(axis='y')
     axs[0].yaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
-    grades = data[:, 2:].copy()
+    grades_for_plot = grades.copy()
     number_of_students = data.shape[0]
     number_of_assignments = data.shape[1] - 2
 
     # plotting the points for each assignment so each assignment is a different color
     for i in range(number_of_assignments):
-        y = grades[:, i]
+        y = grades_for_plot[:, i]
         y += np.random.uniform(-0.1,0.1, number_of_students)
 
         x = np.ones(number_of_students) * (i+1)
@@ -255,7 +257,7 @@ if __name__ == '__main__':
         elif mainMenuOption == 2:
             checkError(data, True)
         elif mainMenuOption == 3:
-            gradesPlot(data)
+            gradesPlot(data[:, 2:])
         elif mainMenuOption == 4:
             displayListOfGrades(data)
         elif mainMenuOption == 5:
