@@ -248,7 +248,7 @@ def gradesPlot(grades):
     axs[1].set_axisbelow(True)
     axs[1].plot([], [], color='red', label='Average grade (per assignment)')
     axs[1].legend()
-    
+    #git
     print("Plot is shown in a new window, please close the window to continue\n")
     plt.show()
     
