@@ -11,7 +11,7 @@ Malte Lau               (s224183)
 
 def inputNumber(promt: str):
     '''
-    Params: promt from user
+    Params: promt (str): Promt to be displayed to the user
     Returns: number
     
     Author: August Borg Ljørring (s224178)
@@ -57,6 +57,7 @@ def dataLoad():
     
     Author: August Borg Ljørring (s224178)
     '''
+    
     # Load data from file grades.csv
     while True:
         filename = input("Please enter the name of the file to load: ")
@@ -80,6 +81,7 @@ def checkError(data: np.array, printErrors: bool):
     
     Author: Malte Lau (s224183)
     '''
+    
     has_error = False
     students = data[:, 0]
     
@@ -121,6 +123,7 @@ def displayListOfGrades(data: np.array):
     
     Author: Søren Skov Jensen (s224169)
     '''
+    
     df_columns = np.hstack((
         'Student ID', 'Student Name', 
         np.array([f"A{count}" for count, _ in enumerate(data[0, 2:], start=1)])))
@@ -147,6 +150,7 @@ def computeFinalGrades(data):
     
     Author: Malte Lau (s224183)
     '''
+    
     grades = data[:, 2:]
     gradesFinal = np.zeros(len(data))
     
@@ -169,6 +173,7 @@ def roundGrade(grades: np.array):
     
     Author: Søren Skov Jensen (s224169)
     """
+    
     # Function takes vector of grades and rounds them to the nearest appropriate grade to correct for potential data errors.
     possible_grades = np.array([-3, 0, 2, 4, 7, 10, 12])
     gradesRounded = np.array([])
@@ -185,6 +190,7 @@ def gradesPlot(grades):
     
     Author: August Borg Ljørring (s224178)
     '''
+    
     if checkError(data, False):
         print("The plot might not be accurate! Because of errors in your data, you can run 'check for errors' to get more information\n")
     
@@ -211,17 +217,27 @@ def gradesPlot(grades):
     number_of_assignments = data.shape[1] - 2
 
     # plotting the points for each assignment so each assignment is a different color
+    XM = []
+    YM = []
+    
     for i in range(number_of_assignments):
+        x = np.ones(number_of_students) * (i+1)
+        x += np.random.uniform(-0.1,0.1, number_of_students)
+        
         y = grades_for_plot[:, i]
         y += np.random.uniform(-0.1,0.1, number_of_students)
 
-        x = np.ones(number_of_students) * (i+1)
-        x += np.random.uniform(-0.1,0.1, number_of_students)
-
         axs[1].scatter(x, y, s=30, marker='o', edgecolors='black')
-        #add a line for the average grade for each assignment
-        axs[1].plot([i+0.8, i+1.2], [np.mean(y), np.mean(y)], color='red', linewidth=2)
-
+        
+        ym = np.mean(grades_for_plot[:, i])
+        XM += [i+1]
+        YM += [ym]
+        
+        axs[1].plot([i+0.8, i+1.2], [ym, ym], color='red', linewidth=2)
+    
+    # plotting the mean for each assignment
+    axs[1].plot(XM, YM, color='blue', label='Average grade (as line)')
+    
     axs[1].set_yticks([-3, 0, 2, 4, 7, 10, 12])
     axs[1].set_xticks(np.arange(number_of_assignments)+1)
     axs[1].set_xlabel('Assignments')
@@ -230,6 +246,8 @@ def gradesPlot(grades):
     axs[1].set_ylim(-4, 13)
     axs[1].grid()
     axs[1].set_axisbelow(True)
+    axs[1].plot([], [], color='red', label='Average grade (per assignment)')
+    axs[1].legend()
     
     print("Plot is shown in a new window, please close the window to continue\n")
     plt.show()
