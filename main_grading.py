@@ -219,6 +219,7 @@ def gradesPlot(grades):
         x += np.random.uniform(-0.1,0.1, number_of_students)
 
         axs[1].scatter(x, y, s=30, marker='o', edgecolors='black')
+        
         #add a line for the average grade for each assignment
         axs[1].plot([i+0.8, i+1.2], [np.mean(y), np.mean(y)], color='red', linewidth=2)
 
