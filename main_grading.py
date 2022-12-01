@@ -46,11 +46,6 @@ def menuHandler(menu_items: list):
             break
         
         print(f"Not a valid menu choice. Please choose a number between 1 and {len(menu_items)}")
-
-        # if choice not in range(1, len(menuItems)+1):
-        #     print(f"Not a valid menu choice. Please choose a number between 1 and {len(menuItems)}")
-        # else:
-        #     break
             
     return choice
 
@@ -127,14 +122,11 @@ def displayListOfGrades(data: np.array):
     Author: Søren Skov Jensen (s224169)
     '''
     df_columns = np.hstack((
-        'Student ID', 
-        'Student Name', 
-        np.array([f"A{count}" for count, assignment in enumerate(data[0, 2:], start=1)])))
+        'Student ID', 'Student Name', 
+        np.array([f"A{count}" for count, _ in enumerate(data[0, 2:], start=1)])))
     
     df = pd.DataFrame(data=data, columns=df_columns)
-    
     final_grades = pd.DataFrame({'Final Grade': computeFinalGrades(data[:, 2:])})
-
     df = df.join(final_grades)
     
     print("\nList of grades (alphabetical order):")
@@ -252,13 +244,23 @@ if __name__ == '__main__':
     while True:
         menuItems = np.array(['Load new data.', 'Check for errors.', 'Generate plots.', 'Display list of grades.', 'Quit.'])
         mainMenuOption = menuHandler(menuItems)
+        
+        # 1. Load new data
         if mainMenuOption == 1:
             data = dataLoad()
+            
+        # 2. Check for errors
         elif mainMenuOption == 2:
             checkError(data, True)
+            
+        # 3. Generate plots
         elif mainMenuOption == 3:
             gradesPlot(data[:, 2:])
+            
+        # 4. Display list of grades
         elif mainMenuOption == 4:
             displayListOfGrades(data)
+            
+        # 5. Quit
         elif mainMenuOption == 5:
             break
