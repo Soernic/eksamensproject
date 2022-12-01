@@ -14,7 +14,8 @@ And asking the user to use 'check for errors' to see the errors.
 
 We have also chosen to use snake case as variable naming convention, instead of opting
 for camel case like the functions. This decision is based on the official PEP8 documentation
-where camel case is reserved for classes.
+where camel case is reserved for classes. The function names remain the same, since there
+are specific requirements to them in the task description.
 """
 
 POSSIBLE_GRADES = np.array([-3, 0, 2, 4, 7, 10, 12])
